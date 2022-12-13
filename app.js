@@ -2,7 +2,7 @@
 
 // ********* GLOBAL VARIABLES ##########
 let productArr = [];
-let votingRounds = 3;
+let votingRounds = 25;
 
 // ********* DOM WINDOWS ##########
 let imgContainer = document.getElementById('image-container');
