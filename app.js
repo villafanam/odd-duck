@@ -2,6 +2,8 @@
 
 // ********* GLOBAL VARIABLES ##########
 let productArr = [];
+let arrIndex = [];
+let preProduct = [0, 0, 0];
 let votingRounds = 25;
 
 // ********* DOM WINDOWS ##########
@@ -12,6 +14,8 @@ let imgThree = document.getElementById('image3');
 
 let resultBtn = document.getElementById('btnResult');
 let resultList = document.getElementById('result-list');
+
+let canvasElem = document.getElementById('chart');
 
 // ********* CONSTRUCTOR FUNCTIONS ##########
 function Product(name, imgExtension = 'jpg')
@@ -29,18 +33,27 @@ function randomIndex(){
 }
 
 function renderImg(){
-  // TODO: 3 unique images and populate the images
-  let img1Index = randomIndex();
-  let img2Index = randomIndex();
-  let img3Index = randomIndex();
-
   // ** Validation to make sure numbers are unique **
-  while(img1Index === img2Index || img2Index === img3Index || img1Index === img3Index){
-    // TODO: reassign one of the variables
-    img1Index = randomIndex();
-    img2Index = randomIndex();
-    img3Index = randomIndex();
+  while(arrIndex.length < 3)
+  {
+    let randNum = randomIndex();
+    if(!arrIndex.includes(randNum) && !preProduct.includes(randNum))
+    {
+      arrIndex.push(randNum);
+      //preProduct.pop();
+    }
+
   }
+
+  // TODO: 3 unique images and populate the images
+  let img1Index = arrIndex.pop();
+  let img2Index = arrIndex.pop();
+  let img3Index = arrIndex.pop();
+  preProduct.pop();
+  preProduct.pop();
+  preProduct.pop();
+
+  preProduct.push(img1Index, img2Index, img3Index);
 
   imgOne.src = productArr[img1Index].img;
   imgTwo.src = productArr[img2Index].img;
@@ -60,6 +73,61 @@ function renderImg(){
   productArr[img3Index].views++;
 }
 
+function renderChart() {
+  // TODO: Build out my chart obj
+  let proNames = [];
+  let proVotes = [];
+  let proViews = [];
+
+  for (let i = 0; i < productArr.length; i++) {
+    proNames.push(productArr[i].name);
+    proVotes.push(productArr[i].clicks);
+    proViews.push(productArr[i].views);
+  }
+
+  let chartObj = {
+    type: 'bar',
+    data: {
+      labels: proNames,
+      datasets: [{
+        label: '# of Votes',
+        data: proVotes,
+        borderWidth: 1,
+        backgroundColor: ['hsl(224, 85%, 66%)',
+          'hsl(269, 85%, 66%)',
+          'hsl(314, 85%, 66%)',
+          'hsl(359, 85%, 66%)',
+          'hsl(44, 85%, 66%)',
+          'hsl(89, 85%, 66%)',
+          'hsl(134, 85%, 66%)',
+          'hsl(179, 85%, 66%)'],
+      },
+      {
+        label: '# of Views',
+        data: proViews,
+        borderWidth: 1,
+        backgroundColor: ['hsl(224, 85%, 34%)',
+        'hsl(269, 85%, 34%)',
+        'hsl(314, 85%, 34%)',
+        'hsl(359, 85%, 34%)',
+        'hsl(44, 85%, 34%)',
+        'hsl(89, 85%, 34%)',
+        'hsl(134, 85%, 34%)',
+        'hsl(179, 85%,34%)']
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  };
+
+  // TODO: use the Chart Constructor - pass in canvas elem, and my chartObj with all the goat data
+  new Chart(canvasElem, chartObj);
+}
 // ********* EVENT HANDLERS ##########
 function handleClick(event)
 {
@@ -87,12 +155,15 @@ function handleResults()
 {
   if(votingRounds === 0)
   {
-    for(let i = 0; i < productArr.length; i++)
-    {
-      let liElem = document.createElement('li');
-      liElem.textContent = `${productArr[i].name} had ${productArr[i].clicks} votes and was seen ${productArr[i].views} times.`;
-      resultList.appendChild(liElem);
-    }
+    //result list rendering
+    // for(let i = 0; i < productArr.length; i++)
+    // {
+    //   let liElem = document.createElement('li');
+    //   liElem.textContent = `${productArr[i].name} had ${productArr[i].clicks} votes and was seen ${productArr[i].views} times.`;
+    //   resultList.appendChild(liElem);
+    // }
+    
+    renderChart();
     resultBtn.removeEventListener('click', handleResults);
   }
 }
