@@ -2,7 +2,9 @@
 
 // ********* GLOBAL VARIABLES ##########
 let productArr = [];
-let votingRounds = 25;
+let arrIndex = [];
+let preProduct = [0, 0, 0];
+let votingRounds = 5;
 
 // ********* DOM WINDOWS ##########
 let imgContainer = document.getElementById('image-container');
@@ -29,18 +31,20 @@ function randomIndex(){
 }
 
 function renderImg(){
-  // TODO: 3 unique images and populate the images
-  let img1Index = randomIndex();
-  let img2Index = randomIndex();
-  let img3Index = randomIndex();
-
   // ** Validation to make sure numbers are unique **
-  while(img1Index === img2Index || img2Index === img3Index || img1Index === img3Index){
-    // TODO: reassign one of the variables
-    img1Index = randomIndex();
-    img2Index = randomIndex();
-    img3Index = randomIndex();
+  while(arrIndex.length < 3)
+  {
+    let randNum = randomIndex();
+    if(!arrIndex.includes(randNum) && !preProduct.includes(randNum))
+    {
+      arrIndex.push(randNum);
+    }
   }
+
+  // TODO: 3 unique images and populate the images
+  let img1Index = arrIndex.pop();
+  let img2Index = arrIndex.pop();
+  let img3Index = arrIndex.pop();
 
   imgOne.src = productArr[img1Index].img;
   imgTwo.src = productArr[img2Index].img;
