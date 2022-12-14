@@ -16,6 +16,8 @@ let resultBtn = document.getElementById('btnResult');
 let resultList = document.getElementById('result-list');
 
 let canvasElem = document.getElementById('chart');
+document.querySelector('button').style.visibility = 'hidden';
+
 
 // ********* CONSTRUCTOR FUNCTIONS ##########
 function Product(name, imgExtension = 'jpg')
@@ -85,6 +87,9 @@ function renderChart() {
     proViews.push(productArr[i].views);
   }
 
+  Chart.defaults.font.size = 20;
+  Chart.defaults.font.weight = 'bold';
+
   let chartObj = {
     type: 'bar',
     data: {
@@ -148,7 +153,15 @@ function handleClick(event)
   
     // TODO: once voting rounds have ended - not allow any more clicks
     if(votingRounds === 0){
+      document.querySelector('button').style.visibility = 'visible';
       imgContainer.removeEventListener('click', handleClick);
+
+       // ****** LOCAL STORAGE STARTS HERE ******
+      // ! STEP 1 - STRINGIFY DATA FOR LOCAL STORAGE
+      let stringifiedProducts = JSON.stringify(productArr);
+
+      // ! STEP 2 - SET TO LOCAL STORAGE
+      localStorage.setItem('myProducts', stringifiedProducts);
     }
 }
 
@@ -170,25 +183,51 @@ function handleResults()
 }
 
 // ********* EXECUTABLE ##########
-let bag = new Product('bag');
-let banana = new Product('banana');
-let bathroom = new Product('bathroom');
-let boots = new Product('boots');
-let breakfast = new Product('breakfast');
-let bubblegum = new Product('bubblegum');
-let chair = new Product('chair');
-let cthulhu = new Product('cthulhu');
-let dogDuck = new Product('dog-duck');
-let dragon = new Product('dragon');
-let pen =new Product('pen');
-let petSweep = new Product('pet-sweep');
-let scissors = new Product('scissors');
-let shark = new Product('shark');
-let sweep = new Product('sweep', 'png');
-let tauntaun = new Product('tauntaun');
-let unicorn = new Product('unicorn');
-let waterCan = new Product('water-can');
-let wineGlass = new Product('wine-glass');
+
+// ! STEP 3 - PULL DATA FROM LOCAL STORAGE
+let retrProducts = localStorage.getItem('myProducts');
+
+// ! STEP 4 - PARSE OUR LOCAL STORAGE DATA
+let parsedProducts = JSON.parse(retrProducts);
+
+//  ******* REBUILD GOATS USING CONSTRUCTOR *******
+if (retrProducts)
+{
+  for (let i = 0; i < parsedProducts.length; i++)
+  {
+    if (parsedProducts[i].name === 'sweep') {
+      let reconstructedSweep = new Product(parsedProducts[i].name, 'png');
+      reconstructedSweep.views = parsedProducts[i].views;
+      reconstructedSweep.votes = parsedProducts[i].clicks;
+    } else {
+      let reconstructedProduct = new Product(parsedProducts[i].name);
+      reconstructedProduct.views = parsedProducts[i].views;
+      reconstructedProduct.clicks = parsedProducts[i].clicks;
+    }
+  }
+} 
+else 
+{
+  let bag = new Product('bag');
+  let banana = new Product('banana');
+  let bathroom = new Product('bathroom');
+  let boots = new Product('boots');
+  let breakfast = new Product('breakfast');
+  let bubblegum = new Product('bubblegum');
+  let chair = new Product('chair');
+  let cthulhu = new Product('cthulhu');
+  let dogDuck = new Product('dog-duck');
+  let dragon = new Product('dragon');
+  let pen =new Product('pen');
+  let petSweep = new Product('pet-sweep');
+  let scissors = new Product('scissors');
+  let shark = new Product('shark');
+  let sweep = new Product('sweep', 'png');
+  let tauntaun = new Product('tauntaun');
+  let unicorn = new Product('unicorn');
+  let waterCan = new Product('water-can');
+  let wineGlass = new Product('wine-glass');
+}
 
 renderImg();
 
