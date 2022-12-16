@@ -20,6 +20,13 @@ document.querySelector('button').style.visibility = 'hidden';
 
 
 // ********* CONSTRUCTOR FUNCTIONS ##########
+/**
+ * 
+ * @param {String} name name of porduct
+ * @param {String} imgExtension image file extension
+ * 
+ * product constructor
+ */
 function Product(name, imgExtension = 'jpg')
 {
   this.name = name;
@@ -30,10 +37,18 @@ function Product(name, imgExtension = 'jpg')
 }
 
 // ********* HELPER FUNCTIONS ##########
+/**
+ * 
+ * @returns random number from 0 to the length of the product array
+ */
 function randomIndex(){
   return Math.floor(Math.random() * productArr.length);
 }
 
+/**
+ * renders 3 unique images and unique from the 
+ * previous 3 images 
+ */
 function renderImg(){
   // ** Validation to make sure numbers are unique **
   while(arrIndex.length < 3)
@@ -75,6 +90,9 @@ function renderImg(){
   productArr[img3Index].views++;
 }
 
+/**
+ * renders chart from array of product objs
+ */
 function renderChart() {
   // TODO: Build out my chart obj
   let proNames = [];
@@ -135,6 +153,10 @@ function renderChart() {
   new Chart(canvasElem, chartObj);
 }
 // ********* EVENT HANDLERS ##########
+/**
+ * 
+ * @param {*} event interface represents an event which takes place in the DOM.
+ */
 function handleClick(event)
 {
   let imgClicked = event.target.title;
@@ -165,6 +187,10 @@ function handleClick(event)
     }
 }
 
+/**
+ * handles the result event listener and removes it
+ * renders the chart
+ */
 function handleResults()
 {
   if(votingRounds === 0)
@@ -231,5 +257,6 @@ else
 
 renderImg();
 
+//++++++Event Listener
 imgContainer.addEventListener('click', handleClick);
 resultBtn.addEventListener('click', handleResults);
